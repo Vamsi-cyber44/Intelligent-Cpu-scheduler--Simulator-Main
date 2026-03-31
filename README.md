@@ -1,60 +1,77 @@
-# Intelligent-Cpu-scheduler--Simulator-Main
-An intelligent CPU scheduling simulator that implements and compares FCFS, SJF, Priority, Round Robin, and adaptive scheduling algorithms with performance analysis.
-# 🧠 Intelligent CPU Scheduler Simulator
+# Intelligent CPU Scheduling Simulator
 
-An advanced CPU scheduling simulator that demonstrates and compares different scheduling algorithms with intelligent decision-making capabilities. This project helps visualize how operating systems manage processes efficiently.
+## Description
+This project is an interactive web-based CPU scheduling algorithm simulator featuring multiple scheduling algorithms with visualization. It is created for educational purposes to help understand how different CPU scheduling algorithms work.
 
----
+### Purpose
+The purpose of this project is to provide a visual and interactive way to learn and understand various CPU scheduling algorithms. It allows users to input different processes and visualize how each scheduling algorithm handles them.
 
-## 📌 Overview
+### Features
+- Supports multiple CPU scheduling algorithms: FCFS, SJF, SRTF, Round Robin, and Priority scheduling(Pre-emptive & Non-Pre-emptive).
+- Real-Time Gantt chart visualization.
+- Detailed results including completion time, turnaround time, waiting time, and response time for each process.
+- Dark mode support.
 
-The **Intelligent CPU Scheduler Simulator** is designed to simulate and analyze CPU scheduling techniques such as:
+## Installation
+To install and run the project locally, follow these steps:
 
-- First Come First Serve (FCFS)
-- Shortest Job First (SJF)
-- Priority Scheduling
-- Round Robin (RR)
-- Intelligent / Adaptive Scheduling (custom logic)
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/vamsi/Intelligent-CPU-Scheduler-Simulator.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd CPU-scheduler
+   ```
+3. Open `index.html` in your web browser to start the simulator.
 
-It provides insights into process execution, waiting time, turnaround time, and CPU utilization.
+## Usage
+1. Select a CPU scheduling algorithm from the dropdown menu.
+2. Enter the arrival times, burst times, and priority values (if applicable) for the processes.
+3. Click the "Process Input" button to add the processes.
+4. Click the "Calculate" button to visualize the scheduling algorithm and see the results.
+5. Click the "Start" button see the real-time visulaisation of the Gantt Chart. 
 
----
+### Examples
+Here are some examples of how to use the simulator:
 
-## ⚙️ Features
+#### Example 1: First Come First Served (FCFS)
+- Arrival Times: `0 1 2 3`
+- Burst Times: `3 6 4 5`
 
-- 🔄 Simulation of multiple CPU scheduling algorithms
-- 🧠 Intelligent scheduling decision system
-- 📊 Performance metrics calculation:
-  - Waiting Time
-  - Turnaround Time
-  - Response Time
-- 📈 Comparative analysis between algorithms
-- 🖥️ Interactive or console-based UI (based on your implementation)
-- ⚡ Efficient and optimized logic
+#### Example 2: Shortest Job First (SJF)
+- Arrival Times: `0 1 2 3`
+- Burst Times: `6 8 7 3`
 
----
+#### Example 4: Shortest Remaining Time First (SRTF)
+- Arrival Times: `0 2 4 6`
+- Burst Times: `8 4 9 5`
 
-## 🧪 Algorithms Implemented
+#### Example 4: Round Robin
+- Arrival Times: `0 1 2 3`
+- Burst Times: `5 4 3 2`
+- Time Quantum: `2`
 
-| Algorithm | Description |
-|----------|------------|
-| FCFS | Executes processes in arrival order |
-| SJF | Selects process with shortest burst time |
-| Priority | Executes based on priority |
-| Round Robin | Time-sliced scheduling |
-| Intelligent Scheduler | Adaptive/custom scheduling logic |
+#### Example 5: Priority Scheduling (Non-preemptive)
+- Arrival Times: `0 1 2 3`
+- Burst Times: `4 3 2 1`
+- Priority Values: `2 1 3 4`
 
----
+#### Example 6: Priority Scheduling (Preemptive)
+- Arrival Times: `0 1 2 3`
+- Burst Times: `4 3 2 1`
+- Priority Values: `2 1 3 4`
 
-## 🛠️ Technologies Used
+## Contributing
+Contributions are welcome! If you have any suggestions or improvements, please create a pull request or open an issue on GitHub.
 
-- Language: (C++ / Java / Python — replace accordingly)
-- Concepts: Data Structures, OS Scheduling, Algorithms
+### Guidelines
+- Fork the repository.
+- Create a new branch for your feature or bugfix.
+- Make your changes and commit them with clear and concise messages.
+- Push your changes to your forked repository.
+- Create a pull request to the main repository.
 
----
-
-## ▶️ How to Run
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/your-username/intelligent-cpu-scheduler-simulator.git
+## Resources
+- [GitHub Repository](https://github.com/vamsi/Intelligent-CPU-Scheduler-Simulator.git)
+- [Vamsi's GitHub Profile](https://github.com/vamsi)
