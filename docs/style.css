@@ -798,7 +798,6 @@ tr:hover td {
     background: var(--bg-input);
     border-radius: var(--radius-md);
     min-height: 60px;
-    border: 1px solid var(--border-color);
 }
 
 .gantt-block-live {
@@ -1039,4 +1038,229 @@ tr:hover td {
 ::selection {
     background: rgba(99, 102, 241, 0.3);
     color: var(--text-primary);
+}
+
+/* ---------- Intelligent Suggestion ---------- */
+.suggest-btn {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6) !important;
+    margin-left: 10px;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+}
+
+.suggest-btn:hover {
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4) !important;
+    transform: translateY(-2px);
+}
+
+.suggestion-card {
+    margin-top: 24px;
+    background: linear-gradient(145deg, rgba(30, 30, 50, 0.9), rgba(20, 20, 35, 0.95));
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(139, 92, 246, 0.1);
+    animation: slideUp 0.5s var(--transition-bounce) both;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.suggestion-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.suggestion-header h2 {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 1.1rem;
+    background: linear-gradient(90deg, #f472b6, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.suggestion-header h2::after { display: none; }
+
+.sparkle {
+    font-size: 1.2rem;
+    filter: drop-shadow(0 0 5px rgba(244, 114, 182, 0.5));
+}
+
+.suggestion-content {
+    text-align: center;
+}
+
+.suggestion-content p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
+
+.best-algo-badge {
+    display: inline-block;
+    padding: 10px 24px;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    border-radius: 50px;
+    color: #a78bfa;
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 10px 0;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+    animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(139, 92, 246, 0.4); }
+    100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.2); }
+}
+
+.suggestion-reason {
+    font-style: italic;
+    font-size: 0.78rem !important;
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .suggest-btn {
+        margin-left: 0 !important;
+        margin-top: 10px;
+    }
+}
+
+/* ---------- Advanced Metrics Dashboard ---------- */
+.metrics-dashboard {
+    margin-bottom: 24px;
+    animation: fadeIn 0.8s ease both;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-1);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    opacity: 0.7;
+}
+
+.metric-icon {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-1);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.metric-unit {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-left: 2px;
+}
+
+/* Stats Comparison Table */
+.stats-table-container {
+    margin-top: 24px;
+    background: var(--bg-panel);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    border: 1px solid var(--border-color);
+}
+
+.stats-table-container h3 {
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.stats-table-container table {
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+}
+
+.stats-table-container th {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+}
+
+.stats-table-container tr:hover td {
+    background: rgba(99, 102, 241, 0.08);
+}
+
+.stats-table-container td:not(:first-child) {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--accent-1);
+    text-align: right;
+}
+
+@media screen and (max-width: 600px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
 }

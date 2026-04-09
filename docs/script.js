@@ -13,6 +13,7 @@ window.startLiveSimulation = startLiveSimulation;
 window.togglePause = togglePause;
 window.resetSimulation = resetSimulation;
 window.startLiveVisualization = startLiveVisualization;
+window.suggestBestAlgorithm = suggestBestAlgorithm;
 
 let processes = [];
 let processCounter = 1;
@@ -199,7 +200,124 @@ async function calculateScheduling() {
 
 function displayResults(processQueue) {
     const resultTable = document.getElementById('resultTable');
-    let html = '<table><thead><tr><th>Process</th><th>Completion</th><th>Turnaround</th><th>Waiting</th><th>Response</th></tr></thead><tbody>';
+    const timeline = window.lastResult ? window.lastResult.timeline : [];
+    
+    // 1. Calculations
+    const validProcesses = processQueue.filter(p => p.turnaroundTime >= 0);
+    const numProcesses = validProcesses.length;
+    const totalTime = timeline.length > 0 ? timeline[timeline.length - 1].endTime : 0;
+    
+    // CPU Utilization: (totalTime - idleTime) / totalTime
+    const idleTime = timeline
+        .filter(block => block.processId === 'idle')
+        .reduce((sum, block) => sum + (block.endTime - block.startTime), 0);
+    const busyTime = totalTime - idleTime;
+    const cpuUtilization = totalTime > 0 ? ((busyTime / totalTime) * 100).toFixed(2) : '0.00';
+    
+    // Throughput: processes / totalTime
+    const throughput = totalTime > 0 ? (numProcesses / totalTime).toFixed(4) : '0.0000';
+    
+    // Context Switches: Transition between DIFFERENT processes (ignoring idle)
+    let contextSwitches = 0;
+    let lastProcessId = null;
+    timeline.forEach(block => {
+        if (block.processId !== 'idle') {
+            if (lastProcessId !== null && block.processId !== lastProcessId) {
+                contextSwitches++;
+            }
+            lastProcessId = block.processId;
+        }
+    });
+
+    // Helper for stats
+    const getStats = (arr) => {
+        if (arr.length === 0) return { avg: '0.00', min: 0, max: 0 };
+        const sum = arr.reduce((s, v) => s + v, 0);
+        return {
+            avg: (sum / arr.length).toFixed(2),
+            min: Math.min(...arr),
+            max: Math.max(...arr)
+        };
+    };
+
+    const tatStats = getStats(validProcesses.map(p => p.turnaroundTime));
+    const wtStats = getStats(validProcesses.map(p => p.waitingTime));
+    const rtStats = getStats(validProcesses.map(p => p.responseTime));
+
+    // 2. Build Dashboard HTML
+    let html = `
+        <div class="metrics-dashboard">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">⚡</div>
+                    <div class="metric-label">Avg Waiting Time</div>
+                    <div class="metric-value">${wtStats.avg}<span class="metric-unit">ms</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📊</div>
+                    <div class="metric-label">CPU Utilization</div>
+                    <div class="metric-value">${cpuUtilization}<span class="metric-unit">%</span></div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🔁</div>
+                    <div class="metric-label">Context Switches</div>
+                    <div class="metric-value">${contextSwitches}</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">🚀</div>
+                    <div class="metric-label">Throughput</div>
+                    <div class="metric-value">${throughput}<span class="metric-unit">p/s</span></div>
+                </div>
+            </div>
+
+            <div class="stats-table-container">
+                <h3>📊 Detailed Performance Analytics</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Average</th>
+                            <th>Minimum</th>
+                            <th>Maximum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Turnaround Time</td>
+                            <td>${tatStats.avg}ms</td>
+                            <td>${tatStats.min}ms</td>
+                            <td>${tatStats.max}ms</td>
+                        </tr>
+                        <tr>
+                            <td>Waiting Time</td>
+                            <td>${wtStats.avg}ms</td>
+                            <td>${wtStats.min}ms</td>
+                            <td>${wtStats.max}ms</td>
+                        </tr>
+                        <tr>
+                            <td>Response Time</td>
+                            <td>${rtStats.avg}ms</td>
+                            <td>${rtStats.min}ms</td>
+                            <td>${rtStats.max}ms</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h3>Process Execution Details</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Process</th>
+                    <th>Completion</th>
+                    <th>Turnaround</th>
+                    <th>Waiting</th>
+                    <th>Response</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
 
     processQueue.forEach(process => {
         html += `
@@ -213,40 +331,7 @@ function displayResults(processQueue) {
         `;
     });
 
-    const validProcesses = processQueue.filter(p => p.turnaroundTime >= 0);
-    const avgTurnaround = validProcesses.length > 0 ?
-        (validProcesses.reduce((sum, p) => sum + p.turnaroundTime, 0) / validProcesses.length).toFixed(2) : '0.00';
-    const avgWaiting = validProcesses.length > 0 ?
-        (validProcesses.reduce((sum, p) => sum + p.waitingTime, 0) / validProcesses.length).toFixed(2) : '0.00';
-    const avgResponse = validProcesses.length > 0 ?
-        (validProcesses.reduce((sum, p) => sum + p.responseTime, 0) / validProcesses.length).toFixed(2) : '0.00';
-
-    html += `</tbody></table>
-        <div class="averages">
-            <table class="averages-table">
-                <thead>
-                    <tr>
-                        <th>Metric</th>
-                        <th>Average Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Turnaround Time</td>
-                        <td>${avgTurnaround}</td>
-                    </tr>
-                    <tr>
-                        <td>Waiting Time</td>
-                        <td>${avgWaiting}</td>
-                    </tr>
-                    <tr>
-                        <td>Response Time</td>
-                        <td>${avgResponse}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>`;
-
+    html += '</tbody></table>';
     resultTable.innerHTML = html;
 }
 
@@ -286,5 +371,55 @@ function startLiveSimulation() {
         startLiveVisualization(window.lastResult);
     } else {
         alert('Please calculate schedule first');
+    }
+}
+
+function suggestBestAlgorithm() {
+    if (processes.length === 0) {
+        alert('Please add processes first');
+        return;
+    }
+
+    const suggestionCard = document.getElementById('suggestionCard');
+    const bestAlgoName = document.getElementById('bestAlgoName');
+    
+    // Deep copy processes to avoid modifying the original process array
+    const getProcessesCopy = () => processes.map(p => ({ ...p }));
+    
+    // Algorithms to test
+    const testAlgos = [
+        { id: 'fcfs', name: 'First Come First Served', run: (p) => calculateFCFS(p) },
+        { id: 'sjf', name: 'Shortest Job First (NP)', run: (p) => calculateSJF(p) },
+        { id: 'srtf', name: 'Shortest Remaining Time First (P)', run: (p) => calculateSRTF(p) },
+        { id: 'rr', name: 'Round Robin (Q=2)', run: (p) => {
+            const q = parseInt(document.getElementById('timeQuantum').value) || 2;
+            return calculateRR(p, q);
+        }},
+        { id: 'priority-np', name: 'Priority (Non-preemptive)', run: (p) => calculatePriorityNP(p) },
+        { id: 'priority-p', name: 'Priority (Preemptive)', run: (p) => calculatePriorityP(p) }
+    ];
+
+    let bestAlgo = null;
+    let minAvgWaiting = Infinity;
+
+    testAlgos.forEach(algo => {
+        try {
+            const result = algo.run(getProcessesCopy());
+            const validProcesses = result.processes.filter(p => p.turnaroundTime >= 0);
+            const avgWaiting = validProcesses.reduce((sum, p) => sum + p.waitingTime, 0) / validProcesses.length;
+            
+            if (avgWaiting < minAvgWaiting) {
+                minAvgWaiting = avgWaiting;
+                bestAlgo = algo;
+            }
+        } catch (e) {
+            console.warn(`Could not run ${algo.name} during suggestion:`, e);
+        }
+    });
+
+    if (bestAlgo) {
+        bestAlgoName.textContent = bestAlgo.name;
+        suggestionCard.style.display = 'block';
+        suggestionCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 }

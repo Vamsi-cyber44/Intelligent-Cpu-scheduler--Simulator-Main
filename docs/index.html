@@ -123,6 +123,20 @@
                     </div>
                     <div class="calculate-button-container">
                         <button onclick="window.calculateScheduling()">Calculate</button>
+                        <button id="suggestBtn" class="suggest-btn" onclick="window.suggestBestAlgorithm()">💡 Suggest Best Algorithm</button>
+                    </div>
+                </div>
+
+                <!-- Intelligent Suggestion Result -->
+                <div id="suggestionCard" class="suggestion-card" style="display: none;">
+                    <div class="suggestion-header">
+                        <span class="sparkle">✨</span>
+                        <h2>Intelligent Suggestion</h2>
+                    </div>
+                    <div id="suggestionContent" class="suggestion-content">
+                        <p>Based on your process inputs, the most efficient algorithm is:</p>
+                        <div class="best-algo-badge" id="bestAlgoName">...</div>
+                        <p class="suggestion-reason" id="suggestionReason">This algorithm provides the lowest average waiting time.</p>
                     </div>
                 </div>
 
