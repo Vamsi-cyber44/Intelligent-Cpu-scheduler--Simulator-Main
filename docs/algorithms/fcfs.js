@@ -13,8 +13,7 @@ export function calculateFCFS(processes) {
                 endTime: process.arrivalTime
             });
             currentTime = process.arrivalTime;
-        }
-
+        }  
         process.responseTime = currentTime - process.arrivalTime;
         process.startTime = currentTime;
         process.waitingTime = process.responseTime;
